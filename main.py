@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter import ttk
 import csv
 
+
+# Connect to the database
 host = input("Enter the host: ")
 user = input("Enter the user: ")
 password = input("Enter the password: ")
@@ -17,6 +19,7 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor()
 
+# Create the window
 root = Tk()
 root.title("Inventory Management System")
 root.geometry("800x600")
@@ -55,7 +58,7 @@ products_tree.heading("price", text="Price")
 products_tree.heading("quantity", text="Quantity")
 products_tree.heading("category_id", text="Category ID")
 
-
+# Get the data from the database
 cursor.execute("SELECT * FROM product")
 products = cursor.fetchall()
 for product in products:
@@ -72,7 +75,7 @@ for product in products:
     products_tree.insert(parent="", index="end", values=(
         id, name, description, price, quantity, category_name))
 
-
+# Add a product
 def add_product():
 
     name = name_entry.get()
@@ -100,7 +103,7 @@ def add_product():
     quantity_entry.delete(0, END)
     category_entry.delete(0, END)
 
-
+# Modify a product
 add_product_frame = Frame(root)
 add_product_frame.place(x=500, y=50)
 Label(add_product_frame, text="Name").grid(row=0, column=0)
@@ -122,7 +125,7 @@ add_product_button = Button(
     add_product_frame, text="Add Product", command=add_product)
 add_product_button.grid(row=5, column=1)
 
-
+# Delete a product
 def delete_product():
     selection = products_tree.selection()
     if selection:
@@ -188,7 +191,7 @@ modify_product_button = Button(
     modify_product_frame, text="Modify Product", command=modify_product)
 modify_product_button.grid(row=6, column=1)
 
-
+# Import to CSV
 def import_to_csv():
     cursor.execute("SELECT * FROM product")
     products = cursor.fetchall()
@@ -209,7 +212,7 @@ def import_to_csv():
             product = [id, name, description, price, quantity, category]
             csv_writer.writerow(product)
 
-
+# Export to CSV
 import_to_csv_button = Button(
     root, text="Import to CSV", command=import_to_csv)
 import_to_csv_button.pack()
